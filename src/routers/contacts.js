@@ -7,8 +7,8 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
 
-router.get('/', ctrlWrapper(getStudentsController));
+router.get('/contacts', ctrlWrapper(getStudentsController));
 
-router.get('/:contactId', getStudentsByIdController);
+router.get('/contacts/:contactId', ctrlWrapper(getStudentsByIdController));
 
 export default router;
