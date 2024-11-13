@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { env } from './utils/env.js';
-import { loger } from './middlewares/loger.js';
+import { logger } from './middlewares/loger.js';
 import contactsRouter from './routers/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -17,22 +19,13 @@ export const setupServer = () => {
   );
   app.use(cors());
 
-  app.use(loger);
+  app.use(logger);
 
   app.use('/contacts', contactsRouter);
 
-  app.use('*', (req, res, next) => {
-    res.status(404).json({
-      message: 'Not Found',
-    });
-  });
+  app.use('*', notFoundHandler);
 
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
