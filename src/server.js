@@ -1,10 +1,13 @@
 import express from 'express';
+
+import router from './routers/index.js';
 import cors from 'cors';
 import { env } from './utils/env.js';
 import { logger } from './middlewares/loger.js';
-import contactsRouter from './routers/contacts.js';
+// import contactsRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import cookieParser from 'cookie-parser';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -19,9 +22,12 @@ export const setupServer = () => {
   );
   app.use(cors());
 
+  app.use(cookieParser());
+
   app.use(logger);
 
-  app.use('/contacts', contactsRouter);
+  // app.use('/contacts', contactsRouter);
+  app.use(router);
 
   app.use('*', notFoundHandler);
 

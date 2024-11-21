@@ -23,7 +23,7 @@ router.get('/', ctrlWrapper(getContactsController));
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
-  '/',
+  '/register',
   validateBody(createContactSchema),
   ctrlWrapper(createContactsController),
 );
@@ -37,6 +37,11 @@ router.patch(
 
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 
-router.put('/:contactId', isValidId, ctrlWrapper(upsertConactController));
+router.put(
+  '/:contactId',
+  isValidId,
+  validateBody(createContactSchema),
+  ctrlWrapper(upsertConactController),
+);
 
 export default router;
