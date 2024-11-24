@@ -16,6 +16,8 @@ import {
 
 import { isValidId } from '../middlewares/isValidId.js';
 
+import { authenticate } from '../middlewares/authenticate.js';
+
 const router = Router();
 
 router.get('/', ctrlWrapper(getContactsController));
@@ -23,7 +25,7 @@ router.get('/', ctrlWrapper(getContactsController));
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
-  '/register',
+  '/',
   validateBody(createContactSchema),
   ctrlWrapper(createContactsController),
 );
@@ -43,5 +45,9 @@ router.put(
   validateBody(createContactSchema),
   ctrlWrapper(upsertConactController),
 );
+
+router.use(authenticate);
+
+router.get('/', ctrlWrapper(getContactsController));
 
 export default router;
