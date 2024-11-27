@@ -12,7 +12,6 @@ export const createContactSchema = Joi.object({
   email: Joi.string().email(),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid(...typeList),
-  parentId: Joi.string().required(), // нова властивість
 });
 
 export const updateContactSchema = Joi.object({
