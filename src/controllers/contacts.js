@@ -68,7 +68,7 @@ export const patchContactController = async (req, res, next) => {
   const { _id: userId } = req.user;
   console.log('Contact ID:', contactId); // Проверяем, что ID контакта приходит правильно
   console.log('User ID:', userId); // Проверяем, что userId из токена передается
-  const result = await updateContact(contactId, userId, req.body);
+  const result = await updateContact(contactId, req.body, {}, userId);
   if (!result) {
     next(
       createHttpError(
