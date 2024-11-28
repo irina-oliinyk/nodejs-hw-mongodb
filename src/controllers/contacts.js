@@ -65,19 +65,23 @@ export const createContactsController = async (req, res) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-
   const { _id: userId } = req.user;
-
-  const result = await updateContact(contactId, req.body, userId);
-
+  console.log('Contact ID:', contactId); // Проверяем, что ID контакта приходит правильно
+  console.log('User ID:', userId); // Проверяем, что userId из токена передается
+  const result = await updateContact(contactId, userId, req.body);
   if (!result) {
-    next(createHttpError(404, 'Contact not found'));
+    next(
+      createHttpError(
+        404,
+        'Contact not found or does not belong to the logged-in user',
+      ),
+    );
     return;
   }
 
   res.json({
     status: 200,
-    message: 'Successfully patched a student!',
+    message: 'Successfully patched a contact !',
     data: result.contact,
   });
 };
