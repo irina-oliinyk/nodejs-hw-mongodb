@@ -2,12 +2,21 @@ import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 
+import handlebars from 'handlebars';
+import * as fs from 'node:fs';
+import path from 'node:path';
+
 import { UserCollecction } from '../db/models/user.js';
 import createHttpError from 'http-errors';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 
 import { sendMail } from '../utils/sendMail.js';
+
+const RESET_PASSWORD_TEMPLATE = fs.readFileSync(
+  path.resolve('src/templates/reset-password.hbs'),
+  { encoding: 'UTF_8' },
+);
 
 export const registerUser = async (payload) => {
   const user = await UserCollecction.findOne({
@@ -104,11 +113,13 @@ export async function requestResetPassword(email) {
     },
   );
 
+  const html = handlebars.compile(RESET_PASSWORD_TEMPLATE);
+
   await sendMail({
     from: 'arairishka2@gmail.com',
     to: user.email,
     subject: 'Reset password',
-    html: `<p>To reset your password please visit this <a href="http://localhost:3000/password-reset?token=${resetToken}">link</a> </p>`,
+    html: html({ resetToken }),
   });
 
   console.log(`http://localhost:3000/password-reset?token=${resetToken}`);

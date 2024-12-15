@@ -92,7 +92,7 @@ export async function requestResetPasswordController(req, res) {
 
   await requestResetPassword(email);
 
-  res.send({ Status: 200 });
+  res.send({ Status: 200, message: 'Reset email was sended', data: null });
 }
 
 export async function resetPasswordController(req, res) {
