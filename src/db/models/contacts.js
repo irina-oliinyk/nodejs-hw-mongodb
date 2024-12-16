@@ -27,7 +27,11 @@ const contactsSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'users',
       required: true,
-    }, // нова властивість
+    },
+    avatar: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

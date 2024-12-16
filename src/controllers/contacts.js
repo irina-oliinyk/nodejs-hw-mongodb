@@ -10,6 +10,9 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
 export const getContactsController = async (req, res) => {
   const { _id: userId } = req.user;
 
@@ -51,8 +54,19 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactsController = async (req, res) => {
+  let avatar = null;
+  if (typeof req.file !== 'undefined') {
+    await fs.rename(
+      req.file.path,
+      path.resolve('src', 'public', 'avatars', req.file.filename),
+    );
+    avatar = `http://localhost:3000/avatar/${req.file.filename}`;
+    // console.log(avatar);
+  }
   const { _id: userId } = req.user;
-  const newContact = { ...req.body, userId };
+
+  const newContact = { ...req.body, userId, avatar };
+  console.log(req.file);
 
   const contact = await createContact(newContact);
 

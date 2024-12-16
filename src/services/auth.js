@@ -15,7 +15,7 @@ import { sendMail } from '../utils/sendMail.js';
 
 const RESET_PASSWORD_TEMPLATE = fs.readFileSync(
   path.resolve('src/templates/reset-password.hbs'),
-  { encoding: 'UTF_8' },
+  { encoding: 'UTF-8' },
 );
 
 export const registerUser = async (payload) => {

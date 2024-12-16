@@ -18,6 +18,8 @@ import { isValidId } from '../middlewares/isValidId.js';
 
 import { authenticate } from '../middlewares/authenticate.js';
 
+import { upload } from '../middlewares/upload.js';
+
 const router = Router();
 
 router.use(authenticate);
@@ -28,6 +30,7 @@ router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
   '/',
+  upload.single('avatar'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactsController),
 );
