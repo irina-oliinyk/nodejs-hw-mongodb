@@ -13,6 +13,8 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
+
 export const getContactsController = async (req, res) => {
   const { _id: userId } = req.user;
 
@@ -56,12 +58,20 @@ export const getContactByIdController = async (req, res, next) => {
 export const createContactsController = async (req, res) => {
   let avatar = null;
   if (typeof req.file !== 'undefined') {
-    await fs.rename(
-      req.file.path,
-      path.resolve('src', 'public', 'avatars', req.file.filename),
-    );
-    avatar = `http://localhost:3000/avatar/${req.file.filename}`;
-    // console.log(avatar);
+    if (process.env.ENABLE_CLOUDINARY === 'true') {
+      console.log(process.env.CLOUDINARY_API_KEY);
+      const result = await uploadToCloudinary(req.file.path);
+      await fs.unlink(req.file.path);
+
+      avatar = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'public', 'avatars', req.file.filename),
+      );
+      avatar = `http://localhost:3000/avatars/${req.file.filename}`;
+      // console.log(avatar);
+    }
   }
   const { _id: userId } = req.user;
 

@@ -7,12 +7,18 @@ import { env } from './utils/env.js';
 // import contactsRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
+import path from 'node:path';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
   const app = express();
+
+  app.use('/avatars', express.static(path.resolve('src/public/avatars')));
 
   app.use(
     express.json({
