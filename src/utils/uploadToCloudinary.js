@@ -11,3 +11,5 @@ cloudinary.v2.config({
 export function uploadToCloudinary(filePath) {
   return cloudinary.v2.uploader.upload(filePath);
 }
+
+// ошибка в названиях
