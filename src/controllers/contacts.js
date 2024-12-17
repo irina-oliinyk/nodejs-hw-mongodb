@@ -56,26 +56,26 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactsController = async (req, res) => {
-  let avatar = null;
+  let photo = null;
   if (typeof req.file !== 'undefined') {
     if (process.env.ENABLE_CLOUDINARY === 'true') {
       console.log(process.env.CLOUDINARY_API_KEY);
       const result = await uploadToCloudinary(req.file.path);
       await fs.unlink(req.file.path);
 
-      avatar = result.secure_url;
+      photo = result.secure_url;
     } else {
       await fs.rename(
         req.file.path,
         path.resolve('src', 'public', 'avatars', req.file.filename),
       );
-      avatar = `http://localhost:3000/avatars/${req.file.filename}`;
+      photo = `http://localhost:3000/photos/${req.file.filename}`;
       // console.log(avatar);
     }
   }
   const { _id: userId } = req.user;
 
-  const newContact = { ...req.body, userId, avatar };
+  const newContact = { ...req.body, userId, photo };
   console.log(req.file);
 
   const contact = await createContact(newContact);
@@ -90,8 +90,7 @@ export const createContactsController = async (req, res) => {
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
-  console.log('Contact ID:', contactId); // Проверяем, что ID контакта приходит правильно
-  console.log('User ID:', userId); // Проверяем, что userId из токена передается
+
   const result = await updateContact(contactId, req.body, {}, userId);
   if (!result) {
     next(

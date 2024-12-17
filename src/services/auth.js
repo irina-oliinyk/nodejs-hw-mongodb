@@ -153,6 +153,9 @@ export async function resetPassword(newPassword, token) {
       throw createHttpError(401, 'Token error');
     }
 
-    throw error;
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
   }
 }
