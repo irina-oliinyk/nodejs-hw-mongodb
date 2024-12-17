@@ -90,8 +90,14 @@ export const createContactsController = async (req, res) => {
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
+  const photo = req.file;
+  let photoUrl;
 
-  const result = await updateContact(contactId, req.body, {}, userId);
+  if (photo) {
+    photoUrl = await uploadToCloudinary(photo);
+  }
+
+  const result = await updateContact(contactId, req.body, {}, userId, photoUrl);
   if (!result) {
     next(
       createHttpError(
