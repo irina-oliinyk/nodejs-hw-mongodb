@@ -9,6 +9,10 @@ import {
 
 import { ONE_DAY } from '../constants/index.js';
 
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
+
+import { loginOrSignupWithGoogle } from '../services/auth.js';
+
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
 
@@ -77,15 +81,6 @@ export const refreshUserSessionController = async (req, res) => {
   });
 };
 
-// export const requestResetEmailController = async (req, res) => {
-//   await requestResetToken(req.body.email);
-//   res.json({
-//     message: 'Reset password email was successfully sent!',
-//     status: 200,
-//     data: {},
-//   });
-// };
-
 export async function requestResetPasswordController(req, res) {
   const { email } = req.body;
   console.log({ email });
@@ -112,3 +107,27 @@ export async function resetPasswordController(req, res) {
     data: {},
   });
 }
+
+export const getGoogleOAuthUrlController = async (req, res) => {
+  const url = generateAuthUrl();
+  res.json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: {
+      url,
+    },
+  });
+};
+
+export const loginWithGoogleController = async (req, res) => {
+  const session = await loginOrSignupWithGoogle(req.body.code);
+  setupSession(res, session);
+
+  res.json({
+    status: 200,
+    message: 'Successfully logged in via Google OAuth!',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
+};
