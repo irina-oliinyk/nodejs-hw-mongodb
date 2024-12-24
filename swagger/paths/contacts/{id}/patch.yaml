@@ -1,0 +1,71 @@
+tags:
+  - Contacts
+summary: Update contact by ID
+operationId: patchContact
+description: 'Updates a contact with payload. Requires authorization.'
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: "Contact's phone number"
+            type: string
+            example: '+380698564454'
+          isFavourite:
+            description: 'Is the contact marked as favourite?'
+            type: boolean
+            example: false
+          email:
+            description: "Contact's email"
+            type: string
+            example: 'contact@mail.com'
+          contactType:
+            description: 'Contact type'
+            type: string
+            enum: ['work', 'home', 'personal']
+          photo:
+            description: "Contact's photo"
+            type: string
+            format: binary
+responses:
+  '200':
+    description: Contact successfully updated
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully updated contact!'
+            data:
+              $ref: '../../../components/schemas/contact.yaml'
+  '401':
+    description: Unauthorized error
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    description: Contact not found
+    $ref: '../../../components/responses/404.yaml'

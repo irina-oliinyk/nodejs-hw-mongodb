@@ -1,0 +1,15 @@
+description: Conflict error
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: integer
+          example: 409
+        message:
+          type: string
+          example: 'Conflict - User already exists or resource is already in use.'
